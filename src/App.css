@@ -2,6 +2,11 @@
   text-align: center;
 }
 
+.App.dark {
+  background-color: black;
+  color: white;
+}
+
 .App-logo {
   height: 40vmin;
   pointer-events: none;
@@ -36,4 +41,11 @@
   100% {
     transform: translateY(0px);
   }
+}
+
+
+ 
+.darkTheme {
+  background-color: black;
+  color: white;
 }
