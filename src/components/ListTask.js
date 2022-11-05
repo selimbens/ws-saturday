@@ -11,7 +11,10 @@ export default function ListTask() {
 
 
   useEffect( () => {
-    setList(dataList)
+    setList( () => {
+      if (filtered) return dataList.filter( task => task.isDone === false )
+      return dataList
+    } )
   } ,[dataList])
 
   function changeTheme() {
@@ -19,7 +22,7 @@ export default function ListTask() {
   }
 
   function handleFilter() {
-    if ( !filtered ) setList( dataList.filter((task) => task.isDone === filtered) );
+    if ( !filtered ) setList( dataList.filter((task) => task.isDone === false) );
     if ( filtered ) setList( dataList )
     setFiltered(!filtered);
   }
