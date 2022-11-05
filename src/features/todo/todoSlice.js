@@ -21,7 +21,6 @@ const todoSlice = createSlice({
       const {id, isDone} = action.payload;
       const description = state.tasks.find(task => task.id === id).description
       const posArray = state.tasks.map( task => task.id );
-      const newState = !isDone
       const taskObject = { id, isDone: !isDone, description };
       const position = posArray.indexOf( id );
 
