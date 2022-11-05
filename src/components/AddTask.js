@@ -1,4 +1,10 @@
-export default function AddTask({add}) {
+import { useDispatch } from "react-redux"
+import { addToList } from "../features/todo/todoSlice"
+
+export default function AddTask() {
+
+    const dispatch = useDispatch()
+
     let description = ""
 
     function handleChange(event) {
@@ -6,15 +12,7 @@ export default function AddTask({add}) {
     }
     
     function send() {
-        add(initialList => {
-            const newTask = {
-                id: initialList.length,
-                description: description,
-                isDone: false
-            }
-            
-            return [...initialList, newTask ]
-        })
+        dispatch(addToList(description))
     }
 
     function handleClick(event) {
@@ -24,6 +22,7 @@ export default function AddTask({add}) {
   return (
     <div>
         <input onChange={handleChange} type="text" placeholder="Describe your to do" onKeyUp={handleClick} />
+        <button onClick={send}>Add task</button>
     </div>
   )
 }

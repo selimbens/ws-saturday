@@ -1,12 +1,47 @@
-import { configureStore } from '@reduxjs/toolkit';
-import counterReducer from '../features/counter/counterSlice';
-import todoReducer from "../features/todo/todoSlice"
+import { combineReducers, configureStore } from '@reduxjs/toolkit';
+import todoReducer from "../features/todo/todoSlice";
 import themeReducer from './themeSlice'
+import {
+  persistStore,
+  persistReducer,
+  FLUSH,
+  REHYDRATE,
+  PAUSE,
+  PERSIST,
+  PURGE,
+  REGISTER,
+} from 'redux-persist'
+import storage from 'redux-persist/lib/storage'
+
+const persistConfig = {
+  key: 'root',
+  version: 1,
+  storage,
+}
+
+const rootReducer = combineReducers({
+  todo: todoReducer,
+  theme: themeReducer
+})
+
+
+const persistedReducer = persistReducer(persistConfig, rootReducer)
 
 export const store = configureStore({
-  reducer: {
-    counter: counterReducer,
-    todo: todoReducer,
-    theme: themeReducer
-  },
-});
+  reducer: persistedReducer,
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: [
+          FLUSH,
+          REHYDRATE,
+          PAUSE,
+          PERSIST,
+          PURGE,
+          REGISTER
+        ],
+      },
+    }),
+})
+
+export const persistor = persistStore(store)

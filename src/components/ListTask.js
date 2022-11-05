@@ -1,41 +1,38 @@
-import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { toggleTheme } from "../app/themeSlice";
 import Task from "./Task";
 
-export default function ListTask({ tasks }) {
-  const [filteredList, setFilteredList] = useState(tasks);
-  const [filterByDone, setFilterByDone] = useState(false);
+export default function ListTask() {
+  const dataList = useSelector((state) => state.todo.tasks);
+  const [list, setList] = useState(dataList);
   const [filtered, setFiltered] = useState(false);
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
+
+
+  useEffect( () => {
+    setList(dataList)
+  } ,[dataList])
+
+  function changeTheme() {
+    dispatch(toggleTheme());
+  }
 
   function handleFilter() {
-    dispatch(toggleTheme())
-
-    setFiltered(!filtered)
-    setFilteredList(filteredList.filter( task => {
-        return task.idDone == filterByDone
-    } ))
+    if ( !filtered ) setList( dataList.filter((task) => task.isDone === filtered) );
+    if ( filtered ) setList( dataList )
+    setFiltered(!filtered);
   }
 
   return (
     <div>
+      <button onClick={changeTheme}>Change theme</button>
       <div>
         <button onClick={handleFilter}>
           {filtered ? "Disable" : "Enable"} Filter
         </button>
-        {filtered && (
-          <div>
-            <label>Filter by {filterByDone ? "Done" : "Pending"}</label>
-            <input
-              type="checkbox"
-              value={filterByDone}
-              onChange={() => setFilterByDone(!filterByDone)}
-            />
-          </div>
-        )}
       </div>
-      {tasks.map((task) => (
+      {list.map((task) => (
         <Task key={task.id} {...task} />
       ))}
     </div>
